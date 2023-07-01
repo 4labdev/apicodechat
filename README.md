@@ -6,9 +6,9 @@
   <details>
 <summary>Workflow que Habila CSAT</summary>
 
-Para habilitar o CSAT (pesquisa de satisfação ao cliente) em seu Chatwoot, basta ir até o diretório `workflow-n8n` e baixar o worflow `CsatToChatwootCodechat.json`
+Para habilitar CSAT (Pesquisa de Satisfação ao Cliente) em seu Chatwoot, basta ir até o diretório `workflow-n8n` e baixar e importar o Workflow `CsatToChatwootCodechat.json`
 
-PASSO 01: No node `ConsultaIDBanco` adicione suas credenciais do banco de dados postgres
+PASSO 01: No NODE `ConsultaIDBanco` adicione suas credenciais do banco de dados Postgres
 
 ```bash
 #host
@@ -18,10 +18,10 @@ localhost
 chatwoot_production
 
 #user
-User
+chatwoot
 
 #Password
-Adicone a senha do postgres. Você encontra no arquivo
+Adicone a senha do Postgres. Você encontra no arquivo
 .env do chatwoot em /home/chatwoot/chatwoot/.env
 
 ```
