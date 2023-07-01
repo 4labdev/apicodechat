@@ -1,0 +1,201 @@
+{
+  "name": "CsatToChatwootCodechat",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "csat-codechat",
+        "options": {}
+      },
+      "id": "01969187-1c83-4135-adbb-41071218cb67",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        440,
+        1780
+      ],
+      "webhookId": "79243691-fc88-4b1c-bf0e-6eece08ae620"
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "=msg_csat",
+              "value": "=*{{ $node[\"Webhook\"].json[\"body\"][\"meta\"][\"sender\"][\"name\"] }}* seu atendimento de Ticket de nº{{ $node[\"Webhook\"].json[\"body\"][\"messages\"][0][\"id\"]  }} foi finalizado ! Caso tenha alguma dúvida só enviar uma nova mensagem !\n\nAproveite e avalie nosso atendimento. Sua opinião é muito importante para nós e nos ajudará a identificar áreas de melhorias e continuar oferecendo um serviço de qualidade. 😎\n\nAvalie meu atendimento!👇🏻\nhttps://app.#suaurlchatwoot/survey/responses/{{ $node[\"ConsultaIDBanco\"].json[\"uuid\"] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "e5c8431d-e431-4e16-b734-1264eaac59ad",
+      "name": "SetMensagem",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [
+        960,
+        1760
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=SELECT uuid FROM conversations WHERE contact_inbox_id ={{ $node[\"Webhook\"].json[\"body\"][\"contact_inbox\"][\"id\"] }} ;",
+        "options": {}
+      },
+      "id": "5250e54a-87c8-4a15-a511-fb30a342be82",
+      "name": "ConsultaIDBanco",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2,
+      "position": [
+        600,
+        1700
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "1",
+          "name": "app.dispzap.com"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "ff4a140a-55f2-4d4a-a599-2cdb77d2d404",
+      "name": "No Operation, do nothing",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1300,
+        1680
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "c2ec0f5d-54bc-4dec-849b-ffcb6796346f",
+      "name": "Merge",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2.1,
+      "position": [
+        780,
+        1760
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://#urlcodechat/message/sendText/#suainstancia",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "t8OOEeISKzpmc3jjcMqBWYSaJsafdefer"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\"number\":\"{{ $node[\"Webhook\"].json[\"body\"][\"meta\"][\"sender\"][\"phone_number\"].replace(/\\D/gi, \"\") }}\",\"options\":{\"delay\":3000},\"textMessage\":{\"text\":\"{{ $node[\"SetMensagem\"].json[\"msg_csat\"].replace(/\\n/g, \"\\\\n\") }}\"}}\n\n",
+        "options": {}
+      },
+      "id": "b925ea52-a857-4ef9-9245-d34360c901e6",
+      "name": "SendMSGCodechat",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        1140,
+        1760
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "ConsultaIDBanco",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "ConsultaIDBanco": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "SetMensagem",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SetMensagem": {
+      "main": [
+        [
+          {
+            "node": "SendMSGCodechat",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SendMSGCodechat": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "saveManualExecutions": false,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": "10"
+  },
+  "versionId": "52961735-8a3a-4d93-b0ed-d5f74bbe3ad8",
+  "id": "1018",
+  "meta": {
+    "instanceId": "2fafe52ede5ff1f0e4d8a6dd16955c894d3764bf08ba970691f87aeac9c8de46"
+  },
+  "tags": [
+    {
+      "createdAt": "2023-06-01T02:46:16.770Z",
+      "updatedAt": "2023-06-01T02:46:16.770Z",
+      "id": "10",
+      "name": "DISPZAP"
+    },
+    {
+      "name": "TAYRONE DISPZAP",
+      "createdAt": "2023-07-01T00:44:46.693Z",
+      "updatedAt": "2023-07-01T00:44:46.693Z",
+      "id": "15"
+    }
+  ]
+}
