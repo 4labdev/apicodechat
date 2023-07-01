@@ -22,7 +22,7 @@ User
 
 #Password
 Adicone a senha do postgres. Você encontra no arquivo
-.env do chatwoot em /home/chatwoot/chatwoot
+.env do chatwoot em /home/chatwoot/chatwoot/.env
 
 ```
 
@@ -42,7 +42,8 @@ https://app.chatwoot.com/survey/responses/{{ $node["ConsultaIDBanco"].json["uuid
 
 ```
 
-Hora de testar se tudo está correto! Vai até o chatwoot, cloque em `Configurações`, clique em `Caixa de Entrada` abra as configrações, encontre a opção `Habilitar CSAT` e deixe como ativado. Pronto!
+### Hora de testar se tudo está correto!
+Vai até o chatwoot, clique em `Configurações`, depois em `Caixa de Entrada` abra as configrações, encontre a opção `Habilitar CSAT` e deixe como ativado. Pronto!
 Agora quando uma conversa for fechada será enviado para o cliente um link com a pesquisa de satisfação.
 
 ### Integração Concluída ✅
